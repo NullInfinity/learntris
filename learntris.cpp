@@ -1,61 +1,71 @@
 #include <iostream>
 #include <string>
-#include "Grid.hpp"
+#include "Game.hpp"
 
-float Score = 0.0f;
-unsigned LinesCleared = 0;
-
-void Query(char c) {
-  switch (c) {
-    case 's':
-      std::cout << Score;
-      break;
-    case 'n':
-      std::cout << LinesCleared;
-      break;
-    default:
-      return;
-  }
-  std::cout << std::endl;
-}
-
-void Step(Grid& grid) {
-  unsigned newLinesCleared = grid.Step();
-  LinesCleared += newLinesCleared;
-  Score += 100 * newLinesCleared;
-}
+using namespace std;
 
 int main(int, const char*[]) {
+  Game game;
   bool running = true;
-  Grid grid;
 
-  std::string input;
-  while (running && getline(std::cin, input)) {
+  while (running) {
+    string input;
+    cin >> input;
+
     if (input.length() == 0)
       continue;
+    if (cin.eof()) {
+      running = false;
+      break;
+    }
 
     char response = input[0];
 
     switch (response) {
       case 'q':
+        //game.End();
         running = false;
         break;
       case 'p':
-        std::cout << grid;
+        cout << game.GetGrid();
         break;
       case 'g':
-        std::cin >> grid;
+        cin >> game.GetGridWrite();
         break;
       case 'c':
-        grid.Clear();
+        game.Reset();
         break;
       case 's':
-        Step(grid);
+        game.Step();
+        break;
+      case 't':
+        GetTetramino(game.GetActiveTetramino())->Print(cout);
+        break;
+      case 'I':
+        game.SetActiveTetramino(TetraminoType::I);
+        break;
+      case 'O':
+        game.SetActiveTetramino(TetraminoType::O);
+        break;
+      case 'Z':
+        game.SetActiveTetramino(TetraminoType::Z);
+        break;
+      case 'S':
+        game.SetActiveTetramino(TetraminoType::S);
+        break;
+      case 'J':
+        game.SetActiveTetramino(TetraminoType::J);
+        break;
+      case 'L':
+        game.SetActiveTetramino(TetraminoType::L);
+        break;
+      case 'T':
+        game.SetActiveTetramino(TetraminoType::T);
         break;
       case '?':
         if (input.length() == 1)
           continue;
-        Query(input[1]);
+        cout << game.Query(input[1]) << endl;
         break;
       default:
         break;
